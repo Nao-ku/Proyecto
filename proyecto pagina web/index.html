@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arise — Distribuidor PC Gamer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-top">
+        <div class="brand">
+          <h1>arise</h1>
+          <span class="tag">PC Gamer</span>
+        </div>
+        <div class="header-actions">
+          <button id="loginBtn" class="btn">Iniciar sesión</button>
+          <button id="cartBtn" class="btn">Carrito (<span id="cartCount">0</span>)</button>
+        </div>
+      </div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="#">Productos</a></li>
+          <li><a href="#">Periféricos</a></li>
+          <li><a href="#">Componentes</a></li>
+          <li><a href="#">Ofertas</a></li>
+          <li><a href="#">Soporte</a></li>
+        </ul>
+      </nav>
+      <div class="header-search-bar">
+        <input id="search" type="search" placeholder="Buscar productos..." aria-label="Buscar" />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero-carousel" id="heroCarousel">
+          <div class="carousel-slide active" style="background:linear-gradient(135deg,#050607,#1a0f0a)">
+            <div class="carousel-content">
+              <h2>Experiencia Gaming sin límites</h2>
+              <p>Componentes de élite para tu PC optimizado.</p>
+              <button class="btn primary">Descubre más</button>
+            </div>
+            <div class="carousel-media">
+              <img src="https://via.placeholder.com/600x400/00ff3c/050607?text=Gaming" alt="Gaming Setup" />
+            </div>
+          </div>
+          <div class="carousel-slide peripherals-slide" style="background:linear-gradient(135deg,#0a0505,#1f1a0f)" data-periph="true">
+            <div class="carousel-content">
+              <button class="periph-close" aria-label="Cerrar banner de periféricos">×</button>
+              <h2>Periféricos de Precisión</h2>
+              <p>Mouses, teclados y auriculares para competición.</p>
+              <button class="btn primary">Explorar</button>
+            </div>
+            <div class="carousel-media">
+              <img src="https://assets2.razerzone.com/images/pnx.assets/314d3a6d2a3c3ec9f7f3c8a8d9e7b4f4/razer-deathadder-v3-pro-gallery-1.png" alt="Periféricos" />
+            </div>
+          </div>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <!-- Decorative blobs -->
+        <div class="decor-blobs" aria-hidden="true">
+          <svg width="0" height="0" style="position:absolute">
+            <defs>
+              <filter id="f1" x="-10%" y="-10%" width="120%" height="120%">
+                <feGaussianBlur stdDeviation="12" result="blur"/>
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+              </filter>
+            </defs>
+          </svg>
+          <span class="blob b1"></span>
+          <span class="blob b2"></span>
+          <span class="blob b3"></span>
+        </div>
+      </section>
+
+      <div class="catalog-layout">
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <h4>Categorías</h4>
+            <ul id="categoryList"></ul>
+          </div>
+          <div class="sidebar-section">
+            <h4>Marcas</h4>
+            <select id="brandFilter">
+              <option value="">Todas</option>
+            </select>
+          </div>
+        </aside>
+
+        <section class="main-area">
+          <section class="notifications" id="notifications" aria-live="polite"></section>
+          <section class="filters">
+            <label>Buscar:
+              <input id="search" type="search" placeholder="Buscar productos..." />
+            </label>
+          </section>
+          <section id="productsGrid" class="grid"></section>
+        </section>
+      </div>
+    </main>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <button class="close" id="closeCart">×</button>
+        <h3>Carrito</h3>
+        <div id="cartItems"></div>
+        <div class="cart-footer">
+          <strong>Total: $<span id="cartTotal">0.00</span></strong>
+          <button id="checkoutBtn" class="btn primary">Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <button class="close" id="closeLogin">×</button>
+        <h3>Iniciar sesión</h3>
+        <form id="loginForm">
+          <label>Usuario
+            <input id="username" required />
+          </label>
+          <label>Contraseña
+            <input id="password" type="password" />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Entrar</button>
+            <button type="button" id="logoutBtn" class="btn">Cerrar sesión</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Product Detail Modal with Tabs -->
+    <div id="detailModal" class="modal" aria-hidden="true">
+      <div class="modal-content modal-large">
+        <button class="close" id="closeDetail">×</button>
+        <div class="detail-tabs">
+          <button class="tab-btn active" data-tab="description">Descripción</button>
+          <button class="tab-btn" data-tab="specs">Especificaciones</button>
+          <button class="tab-btn" data-tab="usage">¿Para qué sirve?</button>
+        </div>
+        <div id="detailContent" class="detail-content">
+          <!-- Rellenado por JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox (imagen ampliada) -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <div class="lightbox-inner">
+        <button class="close" id="lightboxClose">×</button>
+        <img id="lightboxImg" alt="Vista ampliada" />
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Sobre Arise</h4>
+          <ul>
+            <li><a href="#">Acerca de</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Carrera</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Soporte</h4>
+          <ul>
+            <li><a href="#">Centro de ayuda</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Estado del sistema</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Comunidad</h4>
+          <ul>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Twitch</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Arise. Distribuidor PC Gamer. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
